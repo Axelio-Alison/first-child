@@ -3,3 +3,10 @@ numpy
 matplotlib
 scipy
 scikit-learn
+tensorflow
+keras
+yfinance
+gymnasium
+
+# FinRL Library #
+#git+https://github.com/AI4Finance-Foundation/FinRL.git

@@ -40,3 +40,12 @@ Thumbs.db
 ##############################
 
 .first-child-venv/
+
+# FinRL Examples #
+##################
+
+.FinRL-examples/
+
+Python/__pycache__/
+Python/segment_tree.py
+Python/replay_buffer.py

@@ -7,6 +7,7 @@ tensorflow
 keras
 yfinance
 gymnasium
+h5py
 
 # FinRL Library #
 #git+https://github.com/AI4Finance-Foundation/FinRL.git

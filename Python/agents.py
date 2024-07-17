@@ -1,17 +1,12 @@
 import numpy as np
-from collections import namedtuple, deque
-import random
-import tensorflow as tf
+import pandas as pd
+from collections import deque
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.optimizers import Adam
-from collections import deque
-import numpy as np
+from tensorflow.keras.models import load_model
 import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Input
-from tensorflow.keras.optimizers import Adam
-from collections import deque
+import json
 import random
 
 
@@ -94,8 +89,42 @@ class DDQNAgent:
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
 
-    def load(self, name):
-        self.model.load_weights(name, verbose = 0)
+    def load(self, filepath):
+        self.model = load_model(filepath + "\\model.h5")
+        self.target_model = load_model(filepath + "\\target_model.h5")
 
-    def save(self, name):
-        self.model.save_weights(name)
+        self.memory = deque(pd.read_pickle(filepath + "\\memory.pkl").to_records(index = False))
+
+        episode = -1
+
+        with open(filepath + "\\agent_data.json", 'r') as f:
+            data = json.load(f)
+
+            self.state_size = data['state_size']
+            self.action_size = data['action_size']
+            self.gamma = data['gamma']
+            self.epsilon = data['epsilon']
+            self.epsilon_min = data['epsilon_min']
+            self.epsilon_decay = data['epsilon_decay']
+            self.learning_rate = data['lr']
+
+            episode = data['episode']
+        
+        return episode
+
+
+
+    def save(self, filepath, episode):
+        self.model.save(filepath + "\\model.h5")
+        self.target_model.save(filepath + "\\target_model.h5")
+
+        memory_df = pd.DataFrame(self.memory, columns = ['state', 'action', 'reward', 'next_state', 'done'])
+        memory_df.to_pickle(filepath + "\\memory.pkl")
+
+        data = {'state_size' : int(self.state_size), 'action_size' : int(self.action_size), 'episode' : episode, 'gamma' : float(self.gamma), 
+        'epsilon' : float(self.epsilon), 'epsilon_min' : float(self.epsilon_min), 'epsilon_decay' : float(self.epsilon_decay), 'lr' : float(self.learning_rate)}
+
+        with open(filepath + "\\agent_data.json", 'w') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+
+

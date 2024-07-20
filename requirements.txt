@@ -8,6 +8,9 @@ keras
 yfinance
 gymnasium
 h5py
+finta
+pmdarima
+statsmodels
 
 # FinRL Library #
 #git+https://github.com/AI4Finance-Foundation/FinRL.git

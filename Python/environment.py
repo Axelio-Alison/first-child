@@ -8,7 +8,7 @@ import discretization
 class PortfolioEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     
-    def __init__(self, n_assets, X: "State Data", y: "Assets' Return", capital: int = 100000):
+    def __init__(self, n_assets, X, y, capital: int = 100000):
         super(PortfolioEnv, self).__init__()
         
         # The assets will be the asset selected + cash option
@@ -22,14 +22,16 @@ class PortfolioEnv(gym.Env):
         self.np_random = 10
         self.n_assets = n_assets + 1
 
-        self.starting_capital = capital
-        self.capital = capital
-        self.capital_x = [self.returns.index[0]]                 # Capital History - Date
-        self.capital_y = [self.capital]                 # Capital History - Value
-        
         # Set initial weights
         self.initial_weights = np.ones(self.n_assets) / self.n_assets
         self.current_weights = self.initial_weights
+
+        self.starting_capital = capital
+        self.capital = capital
+        self.capital_x = [self.returns.index[0]]                # Capital History - Date
+        self.capital_y = [self.capital]                         # Capital History - Value
+        self.capital_weights = [self.current_weights]
+        
 
         # Define action and observation space
         self.action_space = gym.spaces.Discrete(self.action_n)
@@ -71,6 +73,7 @@ class PortfolioEnv(gym.Env):
         self.capital = self.capital * (1 + reward)
         self.capital_x.append(self.returns.index[self.current_step-1])
         self.capital_y.append(self.capital)
+        self.capital_weights.append(self.current_weights)
 
         done = self.current_step >= self.max_steps
 

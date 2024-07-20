@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 from collections import deque
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Dense, Input, Add, Lambda
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import load_model
 import tensorflow as tf
@@ -31,7 +31,7 @@ class DDQNAgent:
         self.memory = deque(maxlen=2000)  # Experience replay buffer
         self.gamma = 0.95  # Discount factor
         self.epsilon = 1.0  # Exploration rate
-        self.epsilon_min = 0.01
+        self.epsilon_min = 0.025
         self.epsilon_decay = 0.995
         self.learning_rate = 0.001
         self.model = self._build_model()  # Online network
@@ -55,9 +55,9 @@ class DDQNAgent:
         # Store experience in the replay buffer
         self.memory.append((state, action, reward, next_state, done))
 
-    def act(self, state):
+    def act(self, state, training = True):
         # Epsilon-greedy action selection
-        if np.random.rand() <= self.epsilon:
+        if np.random.rand() <= self.epsilon and training:
             return random.randrange(self.action_size)
         act_values = self.model.predict(state, verbose = 0)
         return np.argmax(act_values[0])
@@ -90,8 +90,8 @@ class DDQNAgent:
             self.epsilon *= self.epsilon_decay
 
     def load(self, filepath):
-        self.model = load_model(filepath + "\\model.h5")
-        self.target_model = load_model(filepath + "\\target_model.h5")
+        self.model = load_model(filepath + "\\model.keras")
+        self.target_model = load_model(filepath + "\\target_model.keras")
 
         self.memory = deque(pd.read_pickle(filepath + "\\memory.pkl").to_records(index = False))
 
@@ -115,8 +115,8 @@ class DDQNAgent:
 
 
     def save(self, filepath, episode):
-        self.model.save(filepath + "\\model.h5")
-        self.target_model.save(filepath + "\\target_model.h5")
+        self.model.save(filepath + "\\model.keras")
+        self.target_model.save(filepath + "\\target_model.keras")
 
         memory_df = pd.DataFrame(self.memory, columns = ['state', 'action', 'reward', 'next_state', 'done'])
         memory_df.to_pickle(filepath + "\\memory.pkl")
@@ -126,5 +126,102 @@ class DDQNAgent:
 
         with open(filepath + "\\agent_data.json", 'w') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
+
+# class D3QNAgent(DDQNAgent):
+#     def __init__(self, state_size, action_size, neurons):
+#         self.state_size = state_size
+#         self.action_size = action_size
+#         self.memory = deque(maxlen=2000)  # Experience replay buffer
+#         self.gamma = 0.95  # Discount factor
+#         self.epsilon = 1.0  # Exploration rate
+#         self.epsilon_min = 0.025
+#         self.epsilon_decay = 0.995
+#         self.learning_rate = 0.001
+
+#         self.neurons = neurons
+#         self.model = self._build_model(neurons)            # Online network
+#         self.target_model = self._build_model(neurons)     # Target network
+#         self.update_target_model()
+
+#     def _huber_loss(self, y_true, y_pred):
+#         err = y_true - y_pred
+#         cond = tf.abs(err) < 1.0
+#         L2 = 0.5 * tf.square(err)
+#         L1 = (tf.abs(err) - 0.5)
+#         loss = tf.where(cond, L2, L1)
+#         return tf.reduce_mean(loss)
+
+#     def _build_model(self, neurons):
+        
+#         input_layer = Input(shape = (self.state_size,))
+#         dense1 = Dense(neurons[0], activation = 'relu')(input_layer)
+#         dense2 = Dense(neurons[1], activation = 'relu')(dense1)
+#         dense3 = Dense(neurons[2], activation = 'relu')(dense2)
+#         value_fc = Dense(neurons[2], activation='relu')(dense2)
+#         advantage_fc = Dense(neurons[2], activation='relu')(dense2)
+#         value = Dense(1)(value_fc)
+#         advantage = Dense(self.action_size)(advantage_fc)
+#         advantage_mean = Lambda(lambda x: x - tf.reduce_mean(x, axis=1, keepdims=True), output_shape = self.action_size)(advantage)
+#         q_value = Add()([value, advantage_mean])
+#         model = Model(inputs=input_layer, outputs=q_value)
+#         model.compile(loss=self._huber_loss, optimizer=Adam(lr=self.learning_rate))
+#         return model
+
+# import numpy as np
+# import random
+# from collections import deque
+# import tensorflow as tf
+# from tensorflow.keras.models import Model
+# from tensorflow.keras.layers import Dense, Input, Add, Lambda
+# from tensorflow.keras.optimizers import Adam
+
+class AdvantageNormalization(Layer):
+    def __init__(self, **kwargs):
+        super(AdvantageNormalization, self).__init__(**kwargs)
+
+    def call(self, inputs):
+        advantage = inputs
+        mean_advantage = tf.reduce_mean(advantage, axis=1, keepdims=True)
+        return advantage - mean_advantage
+
+class D3QNAgent(DDQNAgent):
+    def __init__(self, state_size, action_size):
+        self.state_size = state_size
+        self.action_size = action_size
+        self.memory = deque(maxlen=2000)
+        self.gamma = 0.95    # discount rate
+        self.epsilon = 1.0   # exploration rate
+        self.epsilon_min = 0.01
+        self.epsilon_decay = 0.995
+        self.learning_rate = 0.001
+        self.model = self._build_model()
+        self.target_model = self._build_model()
+        self.update_target_model()
+
+    def _huber_loss(self, y_true, y_pred):
+        err = y_true - y_pred
+        cond = tf.abs(err) < 1.0
+        L2 = 0.5 * tf.square(err)
+        L1 = (tf.abs(err) - 0.5)
+        loss = tf.where(cond, L2, L1)
+        return tf.reduce_mean(loss)
+
+    def _build_model(self):
+        input_layer = Input(shape=(self.state_size,))
+        dense1 = Dense(75, activation='relu')(input_layer)
+        dense2 = Dense(70, activation='relu')(dense1)
+        value_fc = Dense(66, activation='relu')(dense2)
+        advantage_fc = Dense(66, activation='relu')(dense2)
+        value = Dense(1)(value_fc)
+        advantage = Dense(self.action_size)(advantage_fc)
+        advantage_normalized = AdvantageNormalization()(advantage)
+        q_value = Add()([value, advantage_normalized])
+        model = Model(inputs=input_layer, outputs=q_value)
+        model.compile(loss=self._huber_loss, optimizer=Adam(learning_rate=self.learning_rate))
+        return model
+
+
+
+
 
 

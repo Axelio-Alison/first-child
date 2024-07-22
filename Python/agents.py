@@ -8,6 +8,7 @@ from tensorflow.keras.models import load_model
 import tensorflow as tf
 import json
 import random
+import keras
 
 
 import tensorflow as tf
@@ -175,6 +176,7 @@ class DDQNAgent:
 # from tensorflow.keras.layers import Dense, Input, Add, Lambda
 # from tensorflow.keras.optimizers import Adam
 
+@keras.saving.register_keras_serializable(package = "MyDQNLayers")
 class AdvantageNormalization(Layer):
     def __init__(self, **kwargs):
         super(AdvantageNormalization, self).__init__(**kwargs)
@@ -183,6 +185,15 @@ class AdvantageNormalization(Layer):
         advantage = inputs
         mean_advantage = tf.reduce_mean(advantage, axis=1, keepdims=True)
         return advantage - mean_advantage
+
+@keras.saving.register_keras_serializable(package="MyDQNLayers", name="_huber_loss")
+def _huber_loss(y_true, y_pred):
+    err = y_true - y_pred
+    cond = tf.abs(err) < 1.0
+    L2 = 0.5 * tf.square(err)
+    L1 = (tf.abs(err) - 0.5)
+    loss = tf.where(cond, L2, L1)
+    return tf.reduce_mean(loss)
 
 class D3QNAgent(DDQNAgent):
     def __init__(self, state_size, action_size):
@@ -198,13 +209,7 @@ class D3QNAgent(DDQNAgent):
         self.target_model = self._build_model()
         self.update_target_model()
 
-    def _huber_loss(self, y_true, y_pred):
-        err = y_true - y_pred
-        cond = tf.abs(err) < 1.0
-        L2 = 0.5 * tf.square(err)
-        L1 = (tf.abs(err) - 0.5)
-        loss = tf.where(cond, L2, L1)
-        return tf.reduce_mean(loss)
+    
 
     def _build_model(self):
         input_layer = Input(shape=(self.state_size,))
@@ -217,7 +222,8 @@ class D3QNAgent(DDQNAgent):
         advantage_normalized = AdvantageNormalization()(advantage)
         q_value = Add()([value, advantage_normalized])
         model = Model(inputs=input_layer, outputs=q_value)
-        model.compile(loss=self._huber_loss, optimizer=Adam(learning_rate=self.learning_rate))
+        model.compile(loss=_huber_loss, optimizer=Adam(learning_rate=self.learning_rate))
+        #model.compile(loss='mse', optimizer=Adam(learning_rate=self.learning_rate))
         return model
 
 

@@ -6,5 +6,5 @@ The principal file on which you will find the results of my model are in the [fi
 
 In the Jupyter Notebook file you can find the project that contains _original_ images useful to visualize and explain the work. 
 After the problem definition section, the file is divided in two sections:
-1. __Data Analysis and Benchmark Creation:__ the secton in which I select the assets to use, anlyse the past returns...([Images/Assets Returns Charts.png](https://github.com/Axelio-Alison/first-child/blob/main/Images/Assets%20Returns%20Charts.png))
-
+1. __Data Analysis and Benchmark Creation:__ the secton in which I select the assets to use, anlyse the past returns...
+![Assets Returns Charts](https://github.com/user-attachments/assets/1d4f81eb-4c94-413b-ab9b-0c0870707ef2)

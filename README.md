@@ -8,7 +8,7 @@ In the Jupyter Notebook file you can find the project that contains _original_ i
 After the problem definition section, the file is divided in two sections:
 1. __Data Analysis and Benchmark Creation:__ the secton in which I select the assets to use, analyse the correlation between the assets and their past returns...
 
-![Assets Correlation Matrix](https://github.com/user-attachments/assets/7b9f868d-7b77-45f2-bb1f-a4d99fa38aa9)
+![Assets Correlation Matrix](https://github.com/user-attachments/assets/7b9f868d-7b77-45f2-bb1f-a4d99fa38aa9 =x250)
 
 ![Assets Returns Charts](https://github.com/user-attachments/assets/1d4f81eb-4c94-413b-ab9b-0c0870707ef2)
 

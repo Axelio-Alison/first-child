@@ -9,6 +9,7 @@ After the problem definition section, the file is divided in two sections:
 1. __Data Analysis and Benchmark Creation:__ the secton in which I select the assets to use, analyse the correlation between the assets and their past returns...
 
 ![<img src="Assets Correlation Matrix.png" width="20"/>](https://github.com/user-attachments/assets/7b9f868d-7b77-45f2-bb1f-a4d99fa38aa9)
+<img src="https://github.com/user-attachments/assets/7b9f868d-7b77-45f2-bb1f-a4d99fa38aa9" alt="alt text" width="250px">
 
 ![Assets Returns Charts](https://github.com/user-attachments/assets/1d4f81eb-4c94-413b-ab9b-0c0870707ef2)
 

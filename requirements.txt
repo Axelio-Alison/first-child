@@ -1,6 +1,8 @@
 pandas
 numpy
 matplotlib
+seaborn
+ffmpeg
 scipy
 scikit-learn
 tensorflow

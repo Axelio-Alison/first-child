@@ -3,7 +3,7 @@ import pandas as pd
 import gymnasium as gym
 import matplotlib.pyplot as plt
 import matplotlib
-import discretization
+import Python.discretization as discretization
 
 class PortfolioEnv(gym.Env):
     metadata = {'render.modes': ['human']}
@@ -85,23 +85,6 @@ class PortfolioEnv(gym.Env):
         return obs, reward, done, {}
     
     def render(self, mode = 'human'):
-        
-        #print(self.chart, self.ax, self.fig)
-        #self.update_chart()
-        # if self.current_step == 0:
-
-        #     #self.chart = plt.plot([0], [0])[0]
-        #     self.ax.clear()
-        
-        # if self.current_step > 0:
-
-        #     self.ax.clear()
-        #     self.ax.plot(self.capital_x, self.capital_y)
-        #     self.fig.canvas.draw()
-        #     self.ax.set_xlabel("Date")
-        #     self.ax.set_ylabel("Capital Value")
-
-        #     plt.show()
 
         print(f"\r{self.current_step}/{self.max_steps}\t Portfolio Value: {self.capital:.2f}", end = "")
     

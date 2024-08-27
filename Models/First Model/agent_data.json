@@ -1,6 +1,6 @@
 {
-    "state_size": 9,
-    "action_size": 66,
+    "state_size": 79,
+    "action_size": 286,
     "episode": 9,
     "gamma": 0.95,
     "epsilon": 0.00998645168764533,

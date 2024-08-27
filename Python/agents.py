@@ -128,53 +128,8 @@ class DDQNAgent:
         with open(filepath + "\\agent_data.json", 'w') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
 
-# class D3QNAgent(DDQNAgent):
-#     def __init__(self, state_size, action_size, neurons):
-#         self.state_size = state_size
-#         self.action_size = action_size
-#         self.memory = deque(maxlen=2000)  # Experience replay buffer
-#         self.gamma = 0.95  # Discount factor
-#         self.epsilon = 1.0  # Exploration rate
-#         self.epsilon_min = 0.025
-#         self.epsilon_decay = 0.995
-#         self.learning_rate = 0.001
 
-#         self.neurons = neurons
-#         self.model = self._build_model(neurons)            # Online network
-#         self.target_model = self._build_model(neurons)     # Target network
-#         self.update_target_model()
 
-#     def _huber_loss(self, y_true, y_pred):
-#         err = y_true - y_pred
-#         cond = tf.abs(err) < 1.0
-#         L2 = 0.5 * tf.square(err)
-#         L1 = (tf.abs(err) - 0.5)
-#         loss = tf.where(cond, L2, L1)
-#         return tf.reduce_mean(loss)
-
-#     def _build_model(self, neurons):
-        
-#         input_layer = Input(shape = (self.state_size,))
-#         dense1 = Dense(neurons[0], activation = 'relu')(input_layer)
-#         dense2 = Dense(neurons[1], activation = 'relu')(dense1)
-#         dense3 = Dense(neurons[2], activation = 'relu')(dense2)
-#         value_fc = Dense(neurons[2], activation='relu')(dense2)
-#         advantage_fc = Dense(neurons[2], activation='relu')(dense2)
-#         value = Dense(1)(value_fc)
-#         advantage = Dense(self.action_size)(advantage_fc)
-#         advantage_mean = Lambda(lambda x: x - tf.reduce_mean(x, axis=1, keepdims=True), output_shape = self.action_size)(advantage)
-#         q_value = Add()([value, advantage_mean])
-#         model = Model(inputs=input_layer, outputs=q_value)
-#         model.compile(loss=self._huber_loss, optimizer=Adam(lr=self.learning_rate))
-#         return model
-
-# import numpy as np
-# import random
-# from collections import deque
-# import tensorflow as tf
-# from tensorflow.keras.models import Model
-# from tensorflow.keras.layers import Dense, Input, Add, Lambda
-# from tensorflow.keras.optimizers import Adam
 
 @keras.saving.register_keras_serializable(package = "MyDQNLayers")
 class AdvantageNormalization(Layer):

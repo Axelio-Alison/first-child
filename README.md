@@ -31,4 +31,6 @@ After the problem definition section, the file is divided in two sections:
  <img src = "https://github.com/user-attachments/assets/3fedb029-0266-40e2-ba8c-fe4acefaa5fe" alt = "New Efficient Frontier" width = "600px">
 </p>
 
+## Conclusion
+To give a slight spoiler, the model has generated promising results, but additional tests need to be done to verify its effectiveness. Moreover, I am working to implement the part on traditional forecasting models in the code to improve the model's metrics.
 

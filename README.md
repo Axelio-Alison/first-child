@@ -20,5 +20,11 @@ After the problem definition section, the file is divided in two sections:
 ... and select the two benchmarks to compare to agent results using a Montecarlo simulation.
 
 <p align = "center">
-  <img src = "https://github.com/user-attachments/assets/d51affdc-9709-4d85-9057-8d531a59adec" alt = "Montecarlo Simulation and Efficient Frontier" width = "700px">
+  <img src = "https://github.com/user-attachments/assets/d51affdc-9709-4d85-9057-8d531a59adec" alt = "Montecarlo Simulation and Efficient Frontier" width = "600px">
+</p>
+
+2. __Agent Training:__ the section in which I preprocess input features, train the model and expose the results of my study.
+
+<p align = "center">
+ <img src = "https://github.com/user-attachments/assets/3fedb029-0266-40e2-ba8c-fe4acefaa5fe" alt = "New Efficient Frontier" width = "600px">
 </p>

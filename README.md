@@ -20,5 +20,5 @@ After the problem definition section, the file is divided in two sections:
 ... and select the two benchmarks to compare to agent results using a Montecarlo simulation.
 
 <p align = "center">
-  <img src = "https://github.com/user-attachments/assets/d51affdc-9709-4d85-9057-8d531a59adec" alt = "Montecarlo Simulation and Efficient Frontier" width = "900px>
+  <img src = "https://github.com/user-attachments/assets/d51affdc-9709-4d85-9057-8d531a59adec" alt = "Montecarlo Simulation and Efficient Frontier" width = "900px">
 </p>

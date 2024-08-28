@@ -1,3 +1,5 @@
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+
 # First Child Project: Deep Q-Learning for Portfolio Management
 Hi folks, this is my first serious (and a little bit complex) project about __Reinforcement Learning__ for financial applications. Moreover, this is also a part of my Bachelor's Degree final thesis on _"Forecasting Models and Deep Q-Learning for Portfolio Management"_, a thesis in which I combine forecasting models and Reinforcement Learning techniques to create an Asset Management bot.
 
@@ -28,3 +30,5 @@ After the problem definition section, the file is divided in two sections:
 <p align = "center">
  <img src = "https://github.com/user-attachments/assets/3fedb029-0266-40e2-ba8c-fe4acefaa5fe" alt = "New Efficient Frontier" width = "600px">
 </p>
+
+
